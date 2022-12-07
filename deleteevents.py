@@ -10,17 +10,14 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
 calendarId = os.environ["CALENDAR_ID"]
 calendarCredentialsPath = os.environ["CALENDAR_CREDENTIALS_PATH"]
 
 def main():
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
-    """
-
+    """Deletes all events on scheduled for today on Google Calendar."""
 
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
@@ -60,11 +57,9 @@ def main():
             print('No upcoming events found.')
             return
 
-        # TODO Remove all of the events for the day
+        #Call Calendar API and remove all events for today
         for event in events:
-            print(event)
-            start = event['start'].get('dateTime', event['start'].get('date'))
-            print(start, event['summary'])
+            service.events().delete(calendarId=calendarId, eventId=event['id']).execute()
 
     except HttpError as error:
         print('An error occurred: %s' % error)
