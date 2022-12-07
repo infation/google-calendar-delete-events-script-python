@@ -15,15 +15,15 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 calendarId = "CALENDAR_ID"
 
-def main():
+def main(args=None):
     """Generates a token under token.js for Google Calendar."""
 
     creds = None
     # The file calendar_access_token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('calendar_access_token.json'):
-        creds = Credentials.from_authorized_user_file('calendar_access_token.json', SCOPES)
+    if os.path.exists('credentials/calendar_access_token'):
+        creds = Credentials.from_authorized_user_file('credentials/calendar_access_token', SCOPES)
         
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -63,10 +63,11 @@ def main():
             service.events().delete(calendarId=calendarId, eventId=event['id']).execute()
 
         print('Successfully deleted all events for the day.')
+        return
 
     except HttpError as error:
         print('An error occurred: %s' % error)
-
+        return
 
 if __name__ == '__main__':
     main()
