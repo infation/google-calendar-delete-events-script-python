@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import datetime
+import pytz
 import os.path
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -41,12 +42,15 @@ def main():
 
     try:
         service = build('calendar', 'v3', credentials=creds)
+        
+        #Get the calendar timezone and the current start / end of the day for that specific timezone
+        currentTimeInTimezone = datetime.datetime.now(pytz.timezone("Europe/Amsterdam"))
+        start = currentTimeInTimezone.replace(hour=0, minute=0, second=0, microsecond=1).isoformat()
+        end = currentTimeInTimezone.replace(hour=23, minute=59, second=59, microsecond=999999).isoformat()
+        
+        print('Getting events between ' + start + ' and ' + end)
 
         # Call the Calendar API
-        now = datetime.datetime.utcnow()
-        start = now.replace(hour=0, minute=0, second=0, microsecond=1).isoformat() + 'Z'  # 'Z' indicates UTC time
-        end = now.replace(hour=23, minute=59, second=59, microsecond=999999).isoformat() + 'Z'
-        print('Getting events between ' + start + ' and ' + end)
         events_result = service.events().list(calendarId=calendarId, timeMin=start, timeMax=end, singleEvents=True, orderBy='startTime').execute()
         events = events_result.get('items', [])
 
@@ -56,6 +60,7 @@ def main():
 
         # Prints the start and name of the next 10 events
         for event in events:
+            print(event)
             start = event['start'].get('dateTime', event['start'].get('date'))
             print(start, event['summary'])
 
