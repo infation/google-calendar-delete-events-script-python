@@ -41,24 +41,26 @@ def main():
             token.write(creds.to_json())
 
     try:
+        #Build the service and retrieve the Calendar object
         service = build('calendar', 'v3', credentials=creds)
-        
-        #Get the calendar timezone and the current start / end of the day for that specific timezone
-        currentTimeInTimezone = datetime.datetime.now(pytz.timezone("Europe/Amsterdam"))
-        start = currentTimeInTimezone.replace(hour=0, minute=0, second=0, microsecond=1).isoformat()
-        end = currentTimeInTimezone.replace(hour=23, minute=59, second=59, microsecond=999999).isoformat()
-        
-        print('Getting events between ' + start + ' and ' + end)
+        calendar = service.calendars().get(calendarId=calendarId).execute()
 
-        # Call the Calendar API
-        events_result = service.events().list(calendarId=calendarId, timeMin=start, timeMax=end, singleEvents=True, orderBy='startTime').execute()
+        #Get the calendar timezone and the current start / end of the day for that specific timezone
+        currentTimeInTimezone = datetime.datetime.now(pytz.timezone(calendar['timeZone']))
+        dayStart = currentTimeInTimezone.replace(hour=0, minute=0, second=0, microsecond=1).isoformat()
+        dayEnd = currentTimeInTimezone.replace(hour=23, minute=59, second=59, microsecond=999999).isoformat()
+
+        print('Getting events between ' + dayStart + ' and ' + dayEnd)
+
+        # Get the events
+        events_result = service.events().list(calendarId=calendarId, timeMin=dayStart, timeMax=dayEnd, singleEvents=True, orderBy='startTime').execute()
         events = events_result.get('items', [])
 
         if not events:
             print('No upcoming events found.')
             return
 
-        # Prints the start and name of the next 10 events
+        # TODO Remove all of the events for the day
         for event in events:
             print(event)
             start = event['start'].get('dateTime', event['start'].get('date'))
