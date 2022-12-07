@@ -9,7 +9,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-# If modifying these scopes, delete the file token.json.
+# If modifying these scopes, delete the file calendar_access_token.json.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
@@ -19,18 +19,18 @@ def main():
     """Generates a token under token.js for Google Calendar."""
 
     creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
+    # The file calendar_access_token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    if os.path.exists('calendar_access_token.json'):
+        creds = Credentials.from_authorized_user_file('calendar_access_token.json', SCOPES)
         
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            print('Error: The token was not there or it was invalid. Please delete token.json and run generate_calendar_token.py script again')
+            print('Error: The token was not there or it was invalid. Please delete calendar_access_token.json and run generate_calendar_token.py script again')
             return
 
     try:

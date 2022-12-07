@@ -4,7 +4,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 def main():
-    """Generates a new token/refresh token under token.json for Google Calendar."""
+    """Generates a new token/refresh token under calendar_access_token.json for Google Calendar."""
 
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
@@ -16,7 +16,7 @@ def main():
     creds = flow.run_local_server(port=0)
 
     # Save the credentials
-    with open('token.json', 'w') as token:
+    with open('calendar_access_token.json', 'w') as token:
         token.write(creds.to_json())
 
 

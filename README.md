@@ -8,8 +8,9 @@
 # 3. Create google project
 # 4. Enable Calendar API
 # 5. Oauth Consent
-# 6. Create oauth credentials and save under calendar_credentials.json
-# 7. Add to code
+# 6. Add yourself as test account
+# 7. Create oauth credentials and save under calendar_credentials.json
+# 8. Add to code
 
 # Script
 # 1. Add the oauth credentials file under calendar_credentials.json file
@@ -18,8 +19,9 @@
 # 4. 
 
 # Google Cloud Function Setup
-# 1. Make secret
-# 2. 
+# 1. Make function
+# 2. Add secrets https://cloud.google.com/functions/docs/configuring/secrets
+# 3. Add secrets to function?
 
 # Google Actions
 # 1. Create project action
