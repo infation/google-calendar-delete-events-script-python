@@ -13,29 +13,25 @@ from googleapiclient.errors import HttpError
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
-calendarId = os.environ["CALENDAR_ID"]
-calendarCredentialsPath = os.environ["CALENDAR_CREDENTIALS_PATH"]
+calendarId = "CALENDAR_ID"
 
 def main():
-    """Deletes all events on scheduled for today on Google Calendar."""
+    """Generates a token under token.js for Google Calendar."""
 
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists(calendarCredentialsPath + '/token.json'):
-        creds = Credentials.from_authorized_user_file(calendarCredentialsPath + '/token.json', SCOPES)
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                calendarCredentialsPath + '/calendar_credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open(calendarCredentialsPath + '/token.json', 'w') as token:
-            token.write(creds.to_json())
+            print('Error: The token was not there or it was invalid. Please delete token.json and run generate_calendar_token.py script again')
+            return
 
     try:
         #Build the service and retrieve the Calendar object
@@ -59,7 +55,14 @@ def main():
 
         #Call Calendar API and remove all events for today
         for event in events:
+            if('summary' in event):
+                print('Deleting event: ' + event['summary'])
+            else:
+                print('Deleting event without title...')
+
             service.events().delete(calendarId=calendarId, eventId=event['id']).execute()
+
+        print('Successfully deleted all events for the day.')
 
     except HttpError as error:
         print('An error occurred: %s' % error)
