@@ -22,8 +22,10 @@ def main(args=None):
     # The file calendar_access_token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('credentials/calendar_access_token'):
-        creds = Credentials.from_authorized_user_file('credentials/calendar_access_token', SCOPES)
+
+    
+    if os.path.exists('/credentials/calendar_access_token.json'):
+        creds = Credentials.from_authorized_user_file('/credentials/calendar_access_token.json', SCOPES)
         
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -51,7 +53,7 @@ def main(args=None):
 
         if not events:
             print('No upcoming events found.')
-            return
+            return 1
 
         #Call Calendar API and remove all events for today
         for event in events:
@@ -63,7 +65,7 @@ def main(args=None):
             service.events().delete(calendarId=calendarId, eventId=event['id']).execute()
 
         print('Successfully deleted all events for the day.')
-        return
+        return 1
 
     except HttpError as error:
         print('An error occurred: %s' % error)
