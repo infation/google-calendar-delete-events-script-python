@@ -11,7 +11,7 @@ def main():
     # created automatically when the authorization flow completes for the first
     # time.
 
-    # If there are no (valid) credentials available, let the user log in.
+    # Authenticate the app so that we can generate an access token.
     flow = InstalledAppFlow.from_client_secrets_file('calendar_credentials.json', SCOPES)
     creds = flow.run_local_server(port=0)
 

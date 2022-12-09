@@ -9,23 +9,22 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-# If modifying these scopes, delete the file calendar_access_token.json.
+# The authentication scope
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-
-
-calendarId = "CALENDAR_ID"
+# The CALENDAR_ID of the google calendar you would like to control
+# To export the env variable run: export CALENDAR_ID=<calendar id>
+calendarId = os.environ.get("CALENDAR_ID")
+# The CALENDAR_ACCESS_TOKEN is the env variable that points to the absolute path or the file contents
+# of the calendar_access_token.json. The file stores the user's access and refresh tokens
+# To export the env variable run: export CALENDAR_ACCESS_TOKEN=<path to the file>
+accessToken = os.environ.get("CALENDAR_ACCESS_TOKEN")
 
 def main(args=None):
     """Generates a token under token.js for Google Calendar."""
 
     creds = None
-    # The file calendar_access_token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
 
-    
-    if os.path.exists('/credentials/calendar_access_token.json'):
-        creds = Credentials.from_authorized_user_file('/credentials/calendar_access_token.json', SCOPES)
+    creds = Credentials.from_authorized_user_file(accessToken, SCOPES)
         
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -45,9 +44,8 @@ def main(args=None):
         dayStart = currentTimeInTimezone.replace(hour=0, minute=0, second=0, microsecond=1).isoformat()
         dayEnd = currentTimeInTimezone.replace(hour=23, minute=59, second=59, microsecond=999999).isoformat()
 
-        print('Getting events between ' + dayStart + ' and ' + dayEnd)
-
         # Get the events
+        print('Getting events between ' + dayStart + ' and ' + dayEnd)
         events_result = service.events().list(calendarId=calendarId, timeMin=dayStart, timeMax=dayEnd, singleEvents=True, orderBy='startTime').execute()
         events = events_result.get('items', [])
 
