@@ -1,5 +1,3 @@
-# google-calendar-script
-
 # Delete all events for today in a google calendar by using Google Asistant and Google Cloud Functions.
 
 # 1. Google Cloud Setup
