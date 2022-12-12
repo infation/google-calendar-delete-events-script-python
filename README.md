@@ -17,7 +17,7 @@
 -    Run generate_calendar_token script to generate the token file
 
 ## 3. Google Cloud Function Setup
--    Go to cloud functions and create one. 
+-    Go to cloud functions and create one with Authentication option - "Allow unauthenticated invocations"
 -    Add environment variable CALENDAR ID: Runtime -> Runtime environmental variables -> name: CALENDAR_ID, Value: your calendar id value
 -    Add secrets https://cloud.google.com/functions/docs/configuring/secrets
 -    Reference a secret under Secury and Image repo -> Exposed as env variable, name -> CALENDAR_ACCESS_TOKEN
